@@ -1,0 +1,91 @@
+\documentclass{article}
+\usepackage[a4paper, margin=0.8in]{geometry}
+\usepackage[utf8]{inputenc}                     % format
+\usepackage[english]{babel}                     % language
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{blindtext}
+\usepackage{minted}
+% CUSTOM PACKAGES
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % linebreaks in URLs
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcounter{colnum}
+\newcommand\colnumber{\stepcounter{colnum}\arabic{colnum}}
+\renewcommand{\UrlFont}{\scriptsize}
+\usepackage{graphicx}
+\usepackage{listings}
+\renewcommand{\arraystretch}{1.5}
+
+\title{Datenbanken: Übungsblatt 5}
+\author{Florian Rauls, \textbf{Christian Heusel}, Philipp Göldner}
+\date{}
+
+
+\begin{document}
+
+    \vspace*{-5em}
+    {\let\newpage\relax\maketitle}
+
+    \begin{center}
+        \begin{tabular}{*4{|c}||P{1.5cm}|}
+            \hline
+            Aufgabe \colnumber{} & Aufgabe \colnumber{} & Aufgabe \colnumber{} & Aufgabe \colnumber{} & $\sum$ \\[5pt]
+            \hline
+             & & & & \\[5pt]
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \section*{Aufgabe 1}
+    \emph{Bitte um Anmerkungen hinsichtlich Formatierung der Anfragen!}
+    \begin{enumerate}
+        \item
+            \begin{minted}{SQL}
+SELECT
+    a.name
+FROM
+    ARTIST a, COUNTRY c 
+WHERE 
+    c.name='Germany'
+    and begin_year > 1950 
+    and begin_year < 1970
+    -- Exclude the bands
+    and a.gender is not null
+    and c.id = a.origin
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+SELECT DISTINCT
+    c.city
+FROM
+    ARTIST a, Concert c
+WHERE
+    a.id = c.artist
+    and a.name = 'Rammstein'
+    and c.name = 'Winter 2001 Tour'
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+SELECT 
+    a0.name, (a.end_year-a.begin_year) AS Dauer
+FROM 
+    ARTIST_RELATION a 
+    INNER JOIN ARTIST a1 ON a.artist1 = a1.id 
+        INNER JOIN ARTIST a0 ON a.artist0 = a0.id
+WHERE
+    a.type = 'married'
+    and a.artist0 = 39204
+    or a.artist1 = 39204
+            \end{minted}
+
+    \end{enumerate}
+    \section*{Aufgabe 2}
+\end{document}
