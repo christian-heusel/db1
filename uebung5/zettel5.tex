@@ -155,4 +155,60 @@ WHERE
     AND substring(a.name from '\,\s(.*)') is not NULL
             \end{minted}
     \end{enumerate}
+
+\section*{Aufgabe 3}
+    \begin{enumerate}
+        \item
+            \begin{minted}{SQL}
+SELECT
+    a.name
+FROM
+    ARTIST a
+WHERE
+    a.begin_year = 1990
+    AND a.type = 'Person'
+    AND exists(
+        SELECT *
+        FROM ARTIST b
+        WHERE a.name = b.name AND b.type = 'Group'
+    )
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+SELECT DISTINCT
+    s.name
+FROM
+    SONGS s JOIN CONCERT c ON s.setlist = c.setlist
+WHERE
+    c.artist = (SELECT a.id FROM ARTIST a WHERE a.name = 'AC/DC')
+    AND NOT EXISTS(
+        SELECT *
+        FROM
+            TRACK t JOIN RELEASE r ON r.tracklist = t.tracklist
+            JOIN ARTIST_CREDIT cred on cred.tracklist = t.tracklist
+        WHERE
+            cred.artist = (SELECT a.id FROM ARTIST a WHERE a.name = 'AC/DC')
+            AND s.name = t.name
+    )
+            \end{minted}
+    \end{enumerate}
+
+\section*{Aufgabe 4}
+    \begin{enumerate}
+        \item
+            \begin{minted}{SQL}
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+            \end{minted}
+    \end{enumerate}
 \end{document}
