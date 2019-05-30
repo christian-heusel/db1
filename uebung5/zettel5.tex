@@ -52,13 +52,13 @@
 SELECT
     a.name
 FROM
-    ARTIST a, COUNTRY c 
-WHERE 
+    ARTIST a, COUNTRY c
+WHERE
     c.name='Germany'
-    and begin_year > 1950 
+    and begin_year > 1950
     and begin_year < 1970
     -- Exclude the bands
-    and a.gender is not null
+    and a.type = 'Group'
     and c.id = a.origin
             \end{minted}
         \item
@@ -74,16 +74,44 @@ WHERE
             \end{minted}
         \item
             \begin{minted}{SQL}
-SELECT 
+SELECT
     a0.name, (a.end_year-a.begin_year) AS Dauer
-FROM 
-    ARTIST_RELATION a 
-    INNER JOIN ARTIST a1 ON a.artist1 = a1.id 
+FROM
+    ARTIST_RELATION a
+    INNER JOIN ARTIST a1 ON a.artist1 = a1.id
         INNER JOIN ARTIST a0 ON a.artist0 = a0.id
 WHERE
     a.type = 'married'
-    and a.artist0 = 39204
-    or a.artist1 = 39204
+           and a1.name = 'Morgan, Lorrie'
+or a0.name = 'Morgan, Lorrie'
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+SELECT
+    r0.name, r0.year
+FROM
+    RELEASE r0
+    LEFT OUTER JOIN RELEASE r1
+        ON r0.format = r1.format AND r0.year > r1.year
+    WHERE
+        r1.year IS NULL
+        AND r0.year IS NOT NULL
+        AND r0.format = 'Cassette'
+            \end{minted}
+\pagebreak
+        \item
+            \begin{minted}{SQL}
+SELECT
+    a1.name, a1.begin_year AS Geburtsjahr
+FROM
+    ARTIST_RELATION a
+    INNER JOIN ARTIST a1 ON a.artist1 = a1.id
+        INNER JOIN ARTIST a0 ON a.artist0 = a0.id
+WHERE
+    a.type = 'parent'
+    and a0.name = 'Smith, Will'
+ORDER BY
+    a1.begin_year ASC
             \end{minted}
 
     \end{enumerate}
