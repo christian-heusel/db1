@@ -61,6 +61,7 @@ WHERE
     and a.type = 'Group'
     and c.id = a.origin
             \end{minted}
+        \texttt{Successfully run. Total query runtime: 40 msec. 55 rows affected.}
         \item
             \begin{minted}{SQL}
 SELECT DISTINCT
@@ -72,6 +73,19 @@ WHERE
     and a.name = 'Rammstein'
     and c.name = 'Winter 2001 Tour'
             \end{minted}
+            \begin{tabular}{|c|}
+                \texttt{city} \\
+                \toprule
+                \texttt{Auckland} \\
+                \texttt{Melbourne} \\
+                \texttt{Osaka} \\
+                \texttt{Perth} \\
+                \texttt{Southport} \\
+                \texttt{Sydney} \\
+                \texttt{Tokyo} \\
+                \texttt{Wayville} \\
+            \end{tabular}
+
         \item
             \begin{minted}{SQL}
 SELECT
@@ -85,6 +99,14 @@ WHERE
            and a1.name = 'Morgan, Lorrie'
 or a0.name = 'Morgan, Lorrie'
             \end{minted}
+
+            \begin{tabular}{|c|c|}
+                \texttt{name} & \texttt{dauer} \\
+                \toprule
+                \texttt{Whitley, Keith} & 3 \\
+                \texttt{Randall, Jon} & 3 \\
+                \texttt{Kershaw, Sammy} & 6 \\
+            \end{tabular}
         \item
             \begin{minted}{SQL}
 SELECT
@@ -98,7 +120,11 @@ FROM
         AND r0.year IS NOT NULL
         AND r0.format = 'Cassette'
             \end{minted}
-\pagebreak
+            \begin{tabular}{|c|c|}
+                \texttt{name} & \texttt{year} \\
+                \toprule
+                \texttt{Sgt. Pepper’s Lonely Hearts Club Band} & 1967 \\
+            \end{tabular}
         \item
             \begin{minted}{SQL}
 SELECT
@@ -113,7 +139,12 @@ WHERE
 ORDER BY
     a1.begin_year ASC
             \end{minted}
-
+            \begin{tabular}{|c|c|}
+                \texttt{name} & \texttt{geburtsjahr} \\
+                \toprule
+                \texttt{Smith, Jaden} & 1998 \\
+                \texttt{Smith, Willow} & 2000 \\
+            \end{tabular}
     \end{enumerate}
     \section*{Aufgabe 2}
     \begin{enumerate}
@@ -129,6 +160,23 @@ WHERE
     AND r.format = 'CD'
     AND r.year = 2011
             \end{minted}
+            \begin{tabular}{|c|c|}
+                \texttt{name} \\
+                \toprule
+                \texttt{What Is It Worth} \\
+                \texttt{What Is Left To Say} \\
+                \texttt{What is Left to Say (club edit)} \\
+                \texttt{What Is Light? What Is Laughter? (Skrillex remix)} \\
+                \texttt{What is LOVE} \\
+                \texttt{What Is Love} \\
+                \texttt{(What Is) LOVE?} \\
+                \texttt{WHAT iS LOVE} \\
+                \texttt{What Is Love? (extended mix)} \\
+                \texttt{What is the Beautiful?} \\
+                \texttt{What Is This} \\
+                \texttt{What Is This Lovely Fragrance?} \\
+                \texttt{What Is This Thing Called} \\
+            \end{tabular}
         \item
             \begin{minted}{SQL}
 SELECT
@@ -143,6 +191,12 @@ WHERE
     a2.name is NULL
     AND a1.type = 'Group'
             \end{minted}
+
+            \begin{tabular}{|c|c|}
+                \texttt{name} & \texttt{char\_length} \\
+                \toprule
+                \texttt{All Shall Be Well (And All Shall Be Well and All Manner of Things Shall Be Well)} & 80 \\
+            \end{tabular}
         \item
             \begin{minted}{SQL}
 SELECT
@@ -154,6 +208,22 @@ WHERE
     AND a.type = 'Person'
     AND substring(a.name from '\,\s(.*)') is not NULL
             \end{minted}
+            \begin{tabular}{|c|c|}
+                \texttt{name} \\
+                \toprule
+                \texttt{Keke} \\
+                \texttt{Karin} \\
+                \texttt{Rina} \\
+                \texttt{Hollie} \\
+                \texttt{Riho} \\
+                \texttt{Kanon} \\
+                \texttt{Meimi} \\
+                \texttt{China Anne} \\
+                \texttt{Mia-Sophie} \\
+                \texttt{Jaden} \\
+                \texttt{Ronan} \\
+            \end{tabular}
+
     \end{enumerate}
 
 \section*{Aufgabe 3}
@@ -173,6 +243,19 @@ WHERE
         WHERE a.name = b.name AND b.type = 'Group'
     )
             \end{minted}
+            \begin{tabular}{|c|c|}
+                \texttt{name} \\
+                \toprule
+                \texttt{Alice} \\
+                \texttt{Redd} \\
+                \texttt{Sofie} \\
+                \texttt{Delilah} \\
+                \texttt{Luce} \\
+                \texttt{Ray} \\
+                \texttt{Coco} \\
+                \texttt{Stratus} \\
+                \texttt{Juli} \\
+            \end{tabular}
         \item
             \begin{minted}{SQL}
 SELECT DISTINCT
@@ -191,22 +274,76 @@ WHERE
             AND s.name = t.name
     )
             \end{minted}
+            \begin{tabular}{|c|}
+                \texttt{name} \\
+                \toprule
+                \texttt{Bonny} \\
+                \texttt{Heartbreak Hotel} \\
+                \texttt{Honky Tonk Women} \\
+                \texttt{INTRO- Beavis and Buthead} \\
+                \texttt{Jailhouse Rock} \\
+                \texttt{Jumpin' Jack Flash} \\
+                \texttt{Lucille} \\
+                \texttt{Messin' With the Kid} \\
+                \texttt{That's All Right} \\
+                \texttt{Tutti Frutti} \\
+            \end{tabular}
     \end{enumerate}
 
 \section*{Aufgabe 4}
     \begin{enumerate}
         \item
             \begin{minted}{SQL}
+SELECT
+    count(c.country) as Konzert_anzahl, cou.name
+FROM
+    CONCERT c JOIN COUNTRY cou ON cou.id = c.country
+GROUP BY
+    cou.name
+ORDER BY
+    Konzert_anzahl DESC
             \end{minted}
+        \texttt{Successfully run. Total query runtime: 60 msec. 116 rows affected.}
         \item
             \begin{minted}{SQL}
+SELECT
+    c.name, count(a.name) AS anzahl_kuenstler
+FROM
+    CONCERT c JOIN ARTIST a ON a.id = c.artist
+GROUP BY
+    c.eventdate, c.name, a.name
+ORDER BY
+    anzahl_kuenstler DESC
             \end{minted}
+
+            \texttt{Successfully run. Total query runtime: 438 msec.  190003 rows affected.}
         \item
             \begin{minted}{SQL}
+SELECT
+    release.label, count(release.format)
+FROM
+    release
+GROUP BY
+    release.label, release.format
+HAVING
+    release.format = 'CD'
+    AND count(release.format) > 1500
+ORDER BY count DESC
             \end{minted}
-        \item
-            \begin{minted}{SQL}
-            \end{minted}
+
+            \begin{tabular}{|c|c|}
+                \texttt{label} & \texttt{count} \\
+                \toprule
+                \texttt{Columbia Records} &  \texttt{3683} \\
+                \texttt{Polydor} &   \texttt{2440} \\
+                \texttt{EMI Records} &   \texttt{2293} \\
+                \texttt{Mercury} &   \texttt{2160} \\
+                \texttt{Epic} &  \texttt{1945} \\
+                \texttt{Virgin} &    \texttt{1827} \\
+                \texttt{Rhino} & \texttt{1802} \\
+                \texttt{Capitol Records} &   \texttt{1574} \\
+                \texttt{Warner Bros. Records} &  \texttt{1567} \\
+            \end{tabular}
         \item
             \begin{minted}{SQL}
             \end{minted}
