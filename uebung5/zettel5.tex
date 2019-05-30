@@ -116,4 +116,43 @@ ORDER BY
 
     \end{enumerate}
     \section*{Aufgabe 2}
+    \begin{enumerate}
+        \item
+            \begin{minted}{SQL}
+SELECT DISTINCT
+    t.name
+FROM
+    TRACK t
+    INNER JOIN RELEASE r ON t.tracklist = r.tracklist
+WHERE
+    t.name ILIKE '%what is%'
+    AND r.format = 'CD'
+    AND r.year = 2011
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+SELECT
+    a1.name, char_length(a1.name)
+FROM
+    ARTIST a1
+    LEFT OUTER JOIN
+        artist a2
+    ON
+        char_length(a2.name) > char_length(a1.name)
+WHERE
+    a2.name is NULL
+    AND a1.type = 'Group'
+            \end{minted}
+        \item
+            \begin{minted}{SQL}
+SELECT
+    substring(a.name from '\,\s(.*)') AS Vorname
+FROM
+    ARTIST a
+WHERE
+    a.begin_year = 1998
+    AND a.type = 'Person'
+    AND substring(a.name from '\,\s(.*)') is not NULL
+            \end{minted}
+    \end{enumerate}
 \end{document}
