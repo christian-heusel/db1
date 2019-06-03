@@ -346,6 +346,46 @@ ORDER BY count DESC
             \end{tabular}
         \item
             \begin{minted}{SQL}
+SELECT
+    a1.name, count(a1.name)
+FROM
+    artist_relation a
+    JOIN artist a0 ON a.artist0 = a0.id
+        JOIN artist a1 ON a.artist1 = a1.id
+WHERE
+    a.type = 'member of band'
+GROUP BY
+    a1.name, a1.type
+HAVING
+    a1.type = 'Group'
+    AND count(a1.name) > 20
+ORDER BY
+    count DESC;
             \end{minted}
-    \end{enumerate}
+            \begin{tabular}{|c|c|}
+                \texttt{label} & \texttt{count} \\
+                \toprule
+                \texttt{Enfoirés, Les} & \texttt{274} \\
+                \texttt{Hello! Project} &    \texttt{75} \\
+                \texttt{Onyanko Club} &  \texttt{46} \\
+                \texttt{SDN48} & \texttt{42} \\
+                \texttt{Black Sabbath} & \texttt{31} \\
+                \texttt{Morning Musume.} &   \texttt{31} \\
+                \texttt{Pigface} &   \texttt{29} \\
+                \texttt{Iron Butterfly} &    \texttt{27} \\
+                \texttt{Yes} &   \texttt{25} \\
+                \texttt{Santana} &   \texttt{21} \\
+            \end{tabular}
+            \item
+                \begin{minted}{SQL}
+SELECT a.name, sum(t.length) AS playtime
+FROM
+    TRACK t INNER JOIN ARTIST_CREDIT cred ON t.tracklist = cred.tracklist
+    INNER JOIN ARTIST a ON cred.artist = a.id
+GROUP BY a.id
+HAVING sum(t.length) > 604800
+ORDER BY playtime DESC
+                \end{minted}
+                \texttt{Successfully run. Total query runtime: 18 secs 765 msec. 1983 rows affected.}
+        \end{enumerate}
 \end{document}
