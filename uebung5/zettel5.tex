@@ -55,11 +55,11 @@ FROM
     ARTIST a, COUNTRY c
 WHERE
     c.name='Germany'
-    and begin_year > 1950
-    and begin_year < 1970
+    AND begin_year > 1950
+    AND begin_year < 1970
     -- Exclude the bands
-    and a.type = 'Group'
-    and c.id = a.origin
+    AND a.type = 'Group'
+    AND c.id = a.origin
             \end{minted}
         \texttt{Successfully run. Total query runtime: 40 msec. 55 rows affected.}
         \item
@@ -70,8 +70,8 @@ FROM
     ARTIST a, Concert c
 WHERE
     a.id = c.artist
-    and a.name = 'Rammstein'
-    and c.name = 'Winter 2001 Tour'
+    AND a.name = 'Rammstein'
+    AND c.name = 'Winter 2001 Tour'
             \end{minted}
             \begin{tabular}{|c|}
                 \texttt{city} \\
@@ -96,8 +96,8 @@ FROM
         INNER JOIN ARTIST a0 ON a.artist0 = a0.id
 WHERE
     a.type = 'married'
-           and a1.name = 'Morgan, Lorrie'
-or a0.name = 'Morgan, Lorrie'
+    AND a1.name = 'Morgan, Lorrie'
+    OR a0.name = 'Morgan, Lorrie'
             \end{minted}
 
             \begin{tabular}{|c|c|}
@@ -135,7 +135,7 @@ FROM
         INNER JOIN ARTIST a0 ON a.artist0 = a0.id
 WHERE
     a.type = 'parent'
-    and a0.name = 'Smith, Will'
+    AND a0.name = 'Smith, Will'
 ORDER BY
     a1.begin_year ASC
             \end{minted}
