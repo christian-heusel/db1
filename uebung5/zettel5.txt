@@ -1,0 +1,184 @@
+Abgabgegruppe: Philipp Göldner, Christian Heusel, Florian Rauls
+
+Aufgabe 1.1:
+SELECT
+    a.name
+FROM
+    ARTIST a, COUNTRY c
+WHERE
+    c.name='Germany'
+    AND begin_year > 1950
+    AND begin_year < 1970
+    -- Exclude the bands
+    AND a.type = 'Group'
+    AND c.id = a.origin
+
+Anfrage 1.2:
+SELECT DISTINCT
+    c.city
+FROM
+    ARTIST a, Concert c
+WHERE
+    a.id = c.artist
+    AND a.name = 'Rammstein'
+    AND c.name = 'Winter 2001 Tour'
+
+Anfrage 1.3:
+SELECT
+    a0.name, (a.end_year-a.begin_year) AS Dauer
+FROM
+    ARTIST_RELATION a
+    INNER JOIN ARTIST a1 ON a.artist1 = a1.id
+        INNER JOIN ARTIST a0 ON a.artist0 = a0.id
+WHERE
+    a.type = 'married'
+    AND a1.name = 'Morgan, Lorrie'
+    OR a0.name = 'Morgan, Lorrie'
+
+Anfrage 1.4:
+SELECT
+    r0.name, r0.year
+FROM
+    RELEASE r0
+    LEFT OUTER JOIN RELEASE r1
+        ON r0.format = r1.format AND r0.year > r1.year
+    WHERE
+        r1.year IS NULL
+        AND r0.year IS NOT NULL
+        AND r0.format = 'Cassette'
+
+Anfrage 1.5:
+SELECT
+    a1.name, a1.begin_year AS Geburtsjahr
+FROM
+    ARTIST_RELATION a
+    INNER JOIN ARTIST a1 ON a.artist1 = a1.id
+        INNER JOIN ARTIST a0 ON a.artist0 = a0.id
+WHERE
+    a.type = 'parent'
+    AND a0.name = 'Smith, Will'
+ORDER BY
+    a1.begin_year ASC
+
+Anfrage 2.1:
+SELECT DISTINCT
+    t.name
+FROM
+    TRACK t
+    INNER JOIN RELEASE r ON t.tracklist = r.tracklist
+WHERE
+    t.name ILIKE '%what is%'
+    AND r.format = 'CD'
+    AND r.year = 2011
+
+Anfrage 2.2:
+SELECT
+    a1.name, char_length(a1.name)
+FROM
+    ARTIST a1
+    LEFT OUTER JOIN
+        artist a2
+    ON
+        char_length(a2.name) > char_length(a1.name)
+WHERE
+    a2.name is NULL
+    AND a1.type = 'Group'
+
+Anfrage 2.3:
+SELECT
+    substring(a.name from '\,\s(.*)') AS Vorname
+FROM
+    ARTIST a
+WHERE
+    a.begin_year = 1998
+    AND a.type = 'Person'
+    AND substring(a.name from '\,\s(.*)') is not NULL
+
+Anfrage 3.1:
+SELECT
+    a.name
+FROM
+    ARTIST a
+WHERE
+    a.begin_year = 1990
+    AND a.type = 'Person'
+    AND exists(
+        SELECT *
+        FROM ARTIST b
+        WHERE a.name = b.name AND b.type = 'Group'
+    )
+
+Anfrage 3.2:
+SELECT DISTINCT
+    s.name
+FROM
+    SONGS s JOIN CONCERT c ON s.setlist = c.setlist
+WHERE
+    c.artist = (SELECT a.id FROM ARTIST a WHERE a.name = 'AC/DC')
+    AND NOT EXISTS(
+        SELECT *
+        FROM
+            TRACK t JOIN RELEASE r ON r.tracklist = t.tracklist
+            JOIN ARTIST_CREDIT cred on cred.tracklist = t.tracklist
+        WHERE
+            cred.artist = (SELECT a.id FROM ARTIST a WHERE a.name = 'AC/DC')
+            AND s.name = t.name
+    )
+
+Anfrage 4.1:
+SELECT
+    count(c.country) as Konzert_anzahl, cou.name
+FROM
+    CONCERT c JOIN COUNTRY cou ON cou.id = c.country
+GROUP BY
+    cou.name
+ORDER BY
+    Konzert_anzahl DESC
+
+Anfrage 4.2:
+SELECT
+    c.name, count(a.name) AS anzahl_kuenstler
+FROM
+    CONCERT c JOIN ARTIST a ON a.id = c.artist
+GROUP BY
+    c.eventdate, c.name, a.name
+ORDER BY
+    anzahl_kuenstler DESC
+
+Anfrage 4.3:
+SELECT
+    release.label, count(release.format)
+FROM
+    release
+GROUP BY
+    release.label, release.format
+HAVING
+    release.format = 'CD'
+    AND count(release.format) > 1500
+ORDER BY count DESC
+
+Anfrage 4.4:
+SELECT
+    a1.name, count(a1.name)
+FROM
+    artist_relation a
+    JOIN artist a0 ON a.artist0 = a0.id
+        JOIN artist a1 ON a.artist1 = a1.id
+WHERE
+    a.type = 'member of band'
+GROUP BY
+    a1.name, a1.type
+HAVING
+    a1.type = 'Group'
+    AND count(a1.name) > 20
+ORDER BY
+    count DESC;
+
+Anfrage 4.5:
+SELECT a.name, sum(t.length) AS playtime
+FROM
+    TRACK t INNER JOIN ARTIST_CREDIT cred ON t.tracklist = cred.tracklist
+    INNER JOIN ARTIST a ON cred.artist = a.id
+GROUP BY a.id
+HAVING sum(t.length) > 604800
+ORDER BY playtime DESC
