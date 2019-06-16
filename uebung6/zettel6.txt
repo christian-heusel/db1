@@ -1,0 +1,32 @@
+Abgabgegruppe: Philipp Göldner, Christian Heusel, Florian Rauls
+
+Aufgabe 6.1.1:
+WITH RECURSIVE Fliesst(Fluss, Muendung) AS
+(
+    SELECT Fluss, Muendung
+    FROM Wasserlauf W
+    WHERE fluss = 'Schorte'
+
+    UNION ALL
+
+    SELECT f.Fluss, w.Muendung
+    FROM Fliesst f, Wasserlauf W
+    WHERE f.muendung = w.fluss
+)
+SELECT * FROM Fliesst
+
+Aufgabe 6.1.2:
+WITH RECURSIVE Fliesst(Fluss, Muendung, laenge) AS
+(
+    SELECT Fluss, Muendung, laenge
+    FROM Wasserlauf W
+
+    UNION ALL
+
+    SELECT f.Fluss, w.Muendung, f.laenge+w.laenge
+    FROM Fliesst f, Wasserlauf W
+    WHERE f.muendung = w.fluss
+)
+SELECT fluss as maxabstand_schwarzes_meer FROM Fliesst
+WHERE muendung = 'Schwarzes Meer'
+AND laenge >= (SELECT MAX(laenge) FROM fliesst)

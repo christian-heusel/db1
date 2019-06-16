@@ -1,0 +1,123 @@
+\documentclass{article}
+\usepackage[a4paper, margin=0.8in]{geometry}
+\usepackage[utf8]{inputenc}                     % format
+\usepackage[english]{babel}                     % language
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{blindtext}
+\usepackage{minted}
+% CUSTOM PACKAGES
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % linebreaks in URLs
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcounter{colnum}
+\newcommand\colnumber{\stepcounter{colnum}\arabic{colnum}}
+\renewcommand{\UrlFont}{\scriptsize}
+\usepackage{graphicx}
+\usepackage{listings}
+\renewcommand{\arraystretch}{1.5}
+
+\title{Datenbanken: Übungsblatt 5}
+\author{$\bigl($Florian Rauls, \textbf{Christian Heusel}, Philipp Göldner$\bigr)$ (Gruppe 1)}
+\date{}
+
+
+\begin{document}
+
+    \vspace*{-5em}
+    {\let\newpage\relax\maketitle}
+
+    \begin{center}
+        \begin{tabular}{*3{|c}||P{1.5cm}|}
+            \hline
+            Aufgabe \colnumber{} & Aufgabe \colnumber{} & Aufgabe \colnumber{} & $\sum$ \\[5pt]
+            \hline
+             & & & \\[5pt]
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \section*{Aufgabe 1}
+    \begin{enumerate}
+        \item
+            \begin{minted}{SQL}
+WITH RECURSIVE Fliesst(Fluss, Muendung) AS
+(
+    SELECT Fluss, Muendung
+    FROM Wasserlauf W
+    WHERE fluss = 'Schorte'
+
+    UNION ALL
+
+    SELECT f.Fluss, w.Muendung
+    FROM Fliesst f, Wasserlauf W
+    WHERE f.muendung = w.fluss
+)
+SELECT * FROM Fliesst
+            \end{minted}
+            \begin{tabular}{|c|c|}
+                \texttt{fluss} & \texttt{Muendung} \\
+                \toprule
+                \texttt{Schorte} & \texttt{Ilm} \\
+                \texttt{Schorte} & \texttt{Saale} \\
+                \texttt{Schorte} & \texttt{Elbe} \\
+                \texttt{Schorte} & \texttt{Nordsee} \\
+            \end{tabular}
+        \item
+            \begin{minted}{SQL}
+WITH RECURSIVE Fliesst(Fluss, Muendung, laenge) AS
+(
+    SELECT Fluss, Muendung, laenge
+    FROM Wasserlauf W
+    UNION ALL
+    SELECT f.Fluss, w.Muendung, f.laenge+w.laenge
+    FROM Fliesst f, Wasserlauf W
+    WHERE f.muendung = w.fluss
+)
+SELECT fluss AS maxabstand_schwarzes_meer FROM Fliesst
+WHERE muendung = 'Schwarzes Meer'
+    AND laenge >= (SELECT MAX(laenge) FROM fliesst)
+            \end{minted}
+            \begin{tabular}{|c|}
+                \texttt{maxabstand\_schwarzes\_meer} \\
+                \toprule
+                \texttt{Inn} \\
+            \end{tabular}
+    \end{enumerate}
+
+\section*{Aufgabe 3}
+    \begin{enumerate}
+        \item
+            \begin{enumerate}
+                \item[i)] Gib den Namen aller Konzerte zurück, auf denen 'Data Control' gespielt wurde.
+                \item[ii)] $\{\texttt{N} | \texttt{CONCERT(\_, \_, N, \_, \_, \_, S)} \land \texttt{SONGS(S, \_, SN)} \land \texttt{SN='Data Control'}\}$
+            \end{enumerate}
+        \item
+            \pagebreak
+            \begin{enumerate}
+                \item[i)] Gib den Namen aller Bands zurück, in deren Lineup Geschwister spielen.
+                \item[ii)]
+                    \begin{equation}
+                    \begin{align}
+                        {
+                            \{\texttt{<a.name>} | \texttt{ar0},\texttt{ ar1},\texttt{ ar2} \in \texttt{ARTIST\_RELATION } \land & \texttt{ ar0.type = 'sibling'}  \\
+                                                                                                                          \land & \texttt{ ar1.type = 'member of band'} \\
+                                                                                                                          \land & \texttt{ ar0.artist2 = ar1.artist0} \\
+                                                                                                                          \land & \texttt{ ar2.artist1 = ar1.artist1} \\
+                                                                                                                          \land & \texttt{ ar2.artist0 = ar0.artist1} \\
+                                                                                                                          \land & \texttt{ ar2.type = 'member of band'} \\
+                                                                                                                          \land & \texttt{ a = 'Group'} \\
+                                                                                                                          \land & \texttt{ a.id = ar1.artist1} \}
+                        }
+                    \end{align}
+                \end{equation}
+            \end{enumerate}
+    \end{enumerate}
+\end{document}
