@@ -1,0 +1,87 @@
+1.
+(i)
+
+
+
+
+
+
+
+
+
+
+
+
+(ii)
+select id, name
+from artist 
+where exists
+(
+      select artist
+      from concert
+       where country != 222
+)
+
+[1000 Tupel]
+
+
+
+
+(iii)
+select id, name
+from artist 
+where artist.id in
+(
+      select artist
+      from concert
+      where country != 222
+)
+
+[3000 Tupel]
+
+
+
+
+
+
+2.
+
+(i)
+
+
+
+
+
+
+
+
+(ii)
+select id, name
+from artist 
+where 
+begin_year = all (select begin_year
+			from artist
+			where begin_year = 1)
+
+[(825393, Weird Shapes), 
+(830814, Bruno Gallone), 
+(843691, Laetoli Setps), 
+(847586, The Dirty Beggars), 
+(862601, Dog Years), 
+(874907, Those Who Dare)]
+
+
+
+(iii)
+select id, name
+from artist 
+where begin_year = (select min(begin_year)
+	            from artist)
+
+
+[(825393, Weird Shapes),
+ (830814, Bruno Gallone),
+ (843691, Laetoli Setps),
+ (847586, The Dirty Beggars),
+ (862601, Dog Years),
+ (874907, Those Who Dare)]
