@@ -1,0 +1,157 @@
+\documentclass[fleqn]{article}
+\usepackage[a4paper, margin=0.8in]{geometry}
+\usepackage[utf8]{inputenc}                     % format
+\usepackage[english]{babel}                     % language
+
+\usepackage{booktabs}
+\usepackage[scale=2]{ccicons}
+\usepackage{blindtext}
+\usepackage{minted}
+% CUSTOM PACKAGES
+\usepackage{mathtools}
+\usepackage{array}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{hyperref}
+\PassOptionsToPackage{hyphens}{url} % linebreaks in URLs
+
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+\newcounter{colnum}
+\newcommand\colnumber{\stepcounter{colnum}\arabic{colnum}}
+\renewcommand{\UrlFont}{\scriptsize}
+\usepackage{graphicx}
+\usepackage{listings}
+\renewcommand{\arraystretch}{1.5}
+
+\title{Datenbanken: Übungsblatt 7}
+\author{$\bigl($Florian Rauls, \textbf{Christian Heusel}, Philipp Göldner$\bigr)$ (Gruppe 1)}
+\date{}
+
+
+\begin{document}
+
+    \vspace*{-5em}
+    {\let\newpage\relax\maketitle}
+
+    \begin{center}
+        \begin{tabular}{*5{|c}||P{1.5cm}|}
+            \hline
+            Aufgabe \colnumber{} & Aufgabe \colnumber{} & Aufgabe \colnumber{} & Aufgabe \colnumber{} & Aufgabe \colnumber{} & $\sum$ \\[5pt]
+            \hline
+             & & & & & \\[5pt]
+            \hline
+        \end{tabular}
+    \end{center}
+
+    \section*{Aufgabe 1}
+    \begin{enumerate}
+        \item
+            \begin{minted}{SQL}
+SELECT a.name, count(*) AS bands_gegruendet
+FROM
+    ARTIST_RELATION ar
+    JOIN ARTIST a
+    ON ar.artist0 = a.id
+WHERE ar.founder = 'Y'
+GROUP BY a.name, ar.artist0
+HAVING count(*) >= 3
+ORDER BY ar.count DESC
+            \end{minted}
+            \begin{tabular}{|c|c|}
+                \texttt{name} & \texttt{bands\_gegruendet} \\
+                \toprule
+                \texttt{Asai, Kenichi}     & \texttt{6} \\
+                \texttt{Hein, Peter}       & \texttt{4} \\
+                \texttt{Tzavaras, Vasilis} & \texttt{4} \\
+                \texttt{Lohner, Danny}     & \texttt{4} \\
+                \texttt{Kaasinen, Sari}    & \texttt{3} \\
+                \texttt{Tibet, David}      & \texttt{3} \\
+                \texttt{Vrenna, Chris}     & \texttt{3} \\
+                \texttt{Fisher, Adam}      & \texttt{3} \\
+                \texttt{Linnet, Anne}      & \texttt{3} \\
+                \texttt{Gane, Tim}         & \texttt{3} \\
+                \texttt{Renders, Koen}     & \texttt{3} \\
+                \texttt{Pablo, Morton}     & \texttt{3} \\
+            \end{tabular}
+
+        \item
+            \begin{minted}{SQL}
+SELECT a.name
+FROM ARTIST a
+WHERE
+    EXISTS (
+        SELECT * FROM (
+            SELECT cou.name
+            FROM concert c JOIN COUNTRY cou ON cou.id = c.country
+            WHERE c.artist = a.id
+            ORDER BY EVENTDATE ASC LIMIT 1) AS tmp
+        WHERE tmp.name = 'Germany'
+    )
+    AND a.begin_year = 1990
+    AND a.type = 'Group'
+            \end{minted}
+            \begin{tabular}{|c|c|}
+                \texttt{name} \\
+                \toprule
+                \texttt{Subway to Sally} \\
+                \texttt{Iced Earth} \\
+                \texttt{In Flames} \\
+                \texttt{Ace of Base} \\
+                \texttt{Dog Eat Dog} \\
+                \texttt{H-Blockx} \\
+                \texttt{And One} \\
+                \texttt{Hypocrisy} \\
+                \texttt{Fiddler's Green} \\
+                \texttt{Immortal} \\
+                \texttt{Welle Erdball} \\
+                \texttt{Wise Guys} \\
+                \texttt{Sylvan} \\
+            \end{tabular}
+
+        \item -
+
+        \item
+            \begin{minted}{SQL}
+SELECT c0.name AS concert, s0.name AS SONG, count(*)
+FROM
+    concert c0 JOIN SONGS s0 ON c0.setlist = s0.setlist
+WHERE
+    EXISTS(
+        SELECT *
+        FROM concert c1 JOIN SONGS s1 ON c1.setlist = s1.setlist
+        WHERE
+            s0.pos = s1.pos+1
+            AND s0.name = s1.name
+            AND c0.name = c1.name
+            AND c0.eventdate = c1.eventdate
+            AND s0.setlist = s1.setlist
+            AND NOT s0.name = ''
+    )
+GROUP BY s0.name, c0.name
+            \end{minted}
+            \texttt{Successfully run.} \texttt{346 rows affected.}
+    \end{enumerate}
+
+
+    \section*{Aufgabe 2}
+    \begin{enumerate}
+        \item
+            \begin{flalign}
+                \{\texttt{<b.Gast> } | \texttt{ b} \in \texttt{BESUCHER}, \texttt{a} \in \texttt{ANGEBOT}, \texttt{m} \in \texttt{MAG }  \land & \texttt{ b.Restaurant = a.Restaurant } \\ \nonumber
+                                                                                                                                       \land & \texttt{ a.Wein = m.Wein} \\ \nonumber
+                                                                                                                                       \land & \texttt{ b.Gast = m.Gast}
+                \}
+            \end{flalign}
+
+        \item
+            \begin{flalign}
+                \{\texttt{<b.Gast> } | \texttt{ b} \in \texttt{BESUCHER}, \texttt{a} \in \texttt{ANGEBOT}, \texttt{m} \in \texttt{MAG }  \land & \texttt{ b.Restaurant = a.Restaurant } \\ \nonumber
+                                                                                                                                       \land & \texttt{ a.Wein = m.Wein} \\ \nonumber
+                                                                                                                                       \land & \texttt{ b.Gast = m.Gast} \\ \nonumber
+                                                                                                                                       \land & \texttt{ b} \notin \texttt{BESUCHER(}\texttt{a.Restaurant = b.Restaurant } \land \\ \nonumber
+                                                                                                                                             &                    \texttt{a.Weine = m.Weine)}
+                \}
+            \end{flalign}
+    \end{enumerate}
+\end{document}

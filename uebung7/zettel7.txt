@@ -1,0 +1,48 @@
+Abgabgegruppe: Philipp Göldner, Christian Heusel, Florian Rauls
+
+Aufgabe 7.1.1:
+SELECT a.name, count(*)
+FROM
+    ARTIST_RELATION ar
+    JOIN ARTIST a
+    ON ar.artist0 = a.id
+WHERE ar.founder = 'Y'
+GROUP BY a.name, ar.artist0
+HAVING count(*) >= 3
+ORDER BY ar.count DESC
+
+Aufgabe 7.1.2:
+SELECT a.name
+FROM ARTIST a
+WHERE
+    exists (
+        SELECT * FROM (
+            SELECT cou.name
+            FROM concert c JOIN COUNTRY cou ON cou.id = c.country
+            WHERE c.artist = a.id
+            ORDER BY EVENTDATE ASC LIMIT 1) AS tmp
+        WHERE tmp.name = 'Germany'
+    )
+    AND a.begin_year = 1990
+    AND a.type = 'Group'
+
+Aufgabe 7.1.3:
+
+
+Aufgabe 7.1.4:
+SELECT c0.name AS concert, s0.name as SONG, count(*)
+FROM
+    concert c0 JOIN SONGS s0 ON c0.setlist = s0.setlist
+WHERE
+    exists(
+        SELECT *
+        FROM concert c1 JOIN SONGS s1 ON c1.setlist = s1.setlist
+        WHERE
+            s0.pos = s1.pos+1
+            AND s0.name = s1.name
+            AND c0.name = c1.name
+            AND c0.eventdate = c1.eventdate
+            AND s0.setlist = s1.setlist
+            AND NOT s0.name = ''
+    )
+GROUP BY s0.name, c0.name
